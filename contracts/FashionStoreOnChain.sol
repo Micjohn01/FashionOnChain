@@ -42,9 +42,9 @@ contract FashionStoreOnChain {
         require(_priceInWei > 0, "Price must be > 0");
         require(_quantity > 0, "Quantity must be > 0");
         
-        // Internal checks using assert
-        assert(_priceInWei <= MAX_PRICE); // Ensure price is within reasonable limits
-        assert(_quantity <= MAX_QUANTITY); // Ensure quantity is within limits
+        
+        assert(_priceInWei <= MAX_PRICE);
+        assert(_quantity <= MAX_QUANTITY);
         
         productCount++;
         products[productCount] = Product({
@@ -62,7 +62,7 @@ contract FashionStoreOnChain {
         require(product.isActive, "Product not available");
         require(_newPrice > 0, "Price must be > 0");
         
-        // Internal checks using assert
+       
         assert(_productId <= productCount); // Ensure product ID exists
         assert(_newPrice <= MAX_PRICE); // Price sanity check
         assert(_newQuantity <= MAX_QUANTITY); // Quantity sanity check
@@ -85,7 +85,7 @@ contract FashionStoreOnChain {
         uint256 totalPrice = product.price * _quantity;
         require(msg.value >= totalPrice, "Insufficient payment");
         
-        // Internal checks using assert
+        
         assert(product.quantity >= _quantity); // Double check stock
         assert(address(this).balance >= msg.value); // Verify contract balance
         assert(totalPrice / _quantity == product.price); // Check for price calculation overflow
@@ -116,10 +116,10 @@ contract FashionStoreOnChain {
         Product storage product = products[_productId];
         uint256 refundAmount = product.price * _quantity;
         
-        // Internal checks using assert
-        assert(product.quantity + _quantity <= MAX_QUANTITY); // Prevent quantity overflow
-        assert(refundAmount / _quantity == product.price); // Check for refund calculation overflow
-        assert(address(this).balance >= refundAmount); // Verify contract has enough funds
+        
+        assert(product.quantity + _quantity <= MAX_QUANTITY); 
+        assert(refundAmount / _quantity == product.price); 
+        assert(address(this).balance >= refundAmount); 
         
         purchases[msg.sender][_productId] -= _quantity;
         product.quantity += _quantity;
@@ -136,8 +136,7 @@ contract FashionStoreOnChain {
         uint256 balance = address(this).balance;
         require(balance > 0, "No funds to withdraw");
         
-        // Internal check using assert
-        assert(balance <= address(this).balance); // Redundant but safe check
+        assert(balance <= address(this).balance);
         
         (bool success, ) = payable(owner).call{value: balance}("");
         if (!success) {
